@@ -40,7 +40,9 @@ class XML_parser():
     
     def vectorize_tfidf(self, twits, twits_test):
         '''
-        Feature-extractor (мешок слов, признаки - tf-idf). Не используется, но может быть использована при solver='liblinear' и multi_class='ovr'.
+        Feature-extractor (мешок слов, признаки - tf-idf). 
+        Не используется, т.к. при solver='lbfgs', multi_class='multinomial' показывает результаты хуже, чем с использованием частот. 
+        Но может быть использована при solver='liblinear' и multi_class='ovr'.
         '''
         vectorizer = TfidfVectorizer(smooth_idf=False)
         extractor = vectorizer.fit_transform(twits)
