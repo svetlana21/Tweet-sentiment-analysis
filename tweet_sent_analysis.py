@@ -28,26 +28,24 @@ class XML_parser():
         target = np.array(classes)      # преобразование оценок в массив меток классов
         return tweets, target
 
-    def vectorize_freq(self, twits, twits_test):
+    def vectorize_freq(self, tweets, tweets_test):
         '''
         Feature-extractor (мешок слов, признаки - частоты слов).
         '''
         vectorizer = CountVectorizer()
-        extractor = vectorizer.fit_transform(twits)
+        extractor = vectorizer.fit_transform(tweets)
         data_train = extractor.toarray()
-        data_test = vectorizer.transform(twits_test).toarray()
+        data_test = vectorizer.transform(tweets_test).toarray()
         return data_train, data_test
     
-    def vectorize_tfidf(self, twits, twits_test):
+    def vectorize_tfidf(self, tweets, tweets_test):
         '''
-        Feature-extractor (мешок слов, признаки - tf-idf). 
-        Не используется, т.к. при solver='lbfgs', multi_class='multinomial' показывает результаты хуже, чем с использованием частот. 
-        Но может быть использована при solver='liblinear' и multi_class='ovr'.
+        Feature-extractor (мешок слов, признаки - tf-idf). Не используется, но может быть использована при solver='liblinear' и multi_class='ovr'.
         '''
         vectorizer = TfidfVectorizer(smooth_idf=False)
-        extractor = vectorizer.fit_transform(twits)
+        extractor = vectorizer.fit_transform(tweets)
         data_train = extractor.toarray()
-        data_test = vectorizer.transform(twits_test).toarray()
+        data_test = vectorizer.transform(tweets_test).toarray()
         return data_train, data_test
 
 class Classifier():
@@ -77,9 +75,9 @@ class Classifier():
 if __name__ == '__main__':
     print('Banks: \n')
     parser = XML_parser()
-    twits_train, target_train = parser.xml_parse('bank_train_2016.xml')     # парсинг обучающей выборки
-    twits_test, target_test = parser.xml_parse('banks_test_etalon.xml')          # парсинг тестовой выборки
-    data_train, data_test = parser.vectorize_freq(twits_train, twits_test)      # преобразование в вектора
+    tweets_train, target_train = parser.xml_parse('bank_train_2016.xml')     # парсинг обучающей выборки
+    tweets_test, target_test = parser.xml_parse('banks_test_etalon.xml')          # парсинг тестовой выборки
+    data_train, data_test = parser.vectorize_freq(tweets_train, tweets_test)      # преобразование в вектора
     
     classifier = Classifier()   
     train = classifier.log_reg_train(data_train, target_train)   # обучение с помощью логистической регрессии
@@ -87,9 +85,9 @@ if __name__ == '__main__':
      
     print('Telecom: \n')
     parser = XML_parser()
-    twits_train, target_train = parser.xml_parse('tkk_train_2016.xml')           # парсинг обучающей выборки
-    twits_test, target_test = parser.xml_parse('tkk_test_etalon.xml')       # парсинг тестовой выборки
-    data_train, data_test = parser.vectorize_freq(twits_train, twits_test)      # преобразование в вектора
+    tweets_train, target_train = parser.xml_parse('tkk_train_2016.xml')           # парсинг обучающей выборки
+    tweets_test, target_test = parser.xml_parse('tkk_test_etalon.xml')       # парсинг тестовой выборки
+    data_train, data_test = parser.vectorize_freq(tweets_train, tweets_test)      # преобразование в вектора
       
     train = classifier.log_reg_train(data_train, target_train)   # обучение с помощью логистической регрессии
     test = classifier.log_reg_test(data_test, target_test)      # тестирование
