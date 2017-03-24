@@ -14,7 +14,7 @@ class XML_parser():
     '''
     def xml_parse(self, filename):
         root = et.parse(filename).getroot()
-        twits = []
+        tweets = []
         classes = []
         for table in root.iter('table'):    # если в table содержится несколько оценок, то такие отзывы не учитываются
             aux_count = 0
@@ -24,9 +24,9 @@ class XML_parser():
                     aux_count += 1
             if aux_count == 1:      # добавление в список твитов и меток классов
                 classes.append(value)
-                twits.append(table[3].text)
+                tweets.append(table[3].text)
         target = np.array(classes)      # преобразование оценок в массив меток классов
-        return twits, target
+        return tweets, target
 
     def vectorize_freq(self, twits, twits_test):
         '''
